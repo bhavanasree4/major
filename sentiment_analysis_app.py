@@ -41,8 +41,7 @@ def get_youtube_comments(video_id, api_key, max_results=50):
     return comments
 
 def get_twitter_tweets(query, api_key, api_secret, access_token, access_token_secret, max_tweets=50):
-    auth = tweepy.OAuthHandler(api_key, api_secret)
-    auth.set_access_token(access_token, access_token_secret)
+    auth = tweepy.OAuth1UserHandler(api_key, api_secret, access_token, access_token_secret)
     api = tweepy.API(auth, wait_on_rate_limit=True)
 
     tweets = []
