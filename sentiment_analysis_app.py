@@ -108,3 +108,47 @@ if st.button("Get Twitter Tweets"):
             st.write(f"**Sentiment:** {sentiment}")
             if emojis:
                 st.write(f"**Emojis:** {''.join(emojis)} - Sentiment: {emoji_sentiments}")
+import streamlit as st
+import pandas as pd
+from nltk.sentiment import SentimentIntensityAnalyzer
+import nltk
+import emoji
+
+# Load dataset
+st.title("📊 Kaggle Twitter Dataset Analysis")
+
+# File path (update this with your CSV name)
+dataset_path = "Twitter_Data.csv"  # Replace with the correct name
+df = pd.read_csv(dataset_path)
+
+# Display dataset preview
+st.write("📄 **Dataset Preview:**")
+st.write(df.head())
+
+# Sentiment Analysis
+nltk.download('vader_lexicon')
+sia = SentimentIntensityAnalyzer()
+
+def analyze_sentiment(text):
+    sentiment = sia.polarity_scores(str(text))
+    if sentiment['compound'] >= 0.05:
+        return "Positive 😀"
+    elif sentiment['compound'] <= -0.05:
+        return "Negative 😡"
+    else:
+        return "Neutral 😐"
+
+# Apply sentiment analysis
+st.write("🔥 **Sentiment Analysis on Tweets:**")
+
+# Check for the correct column name in your CSV (e.g., 'text' or 'content')
+if 'clean_text' in df.columns:
+    df['Sentiment'] = df['clean_text'].apply(analyze_sentiment)
+elif 'category' in df.columns:
+    df['Sentiment'] = df['category'].apply(analyze_sentiment)
+else:
+    st.error("No valid text column found!")
+
+# Display results
+st.write(df[['clean_text', 'Sentiment']].head(10))
+
