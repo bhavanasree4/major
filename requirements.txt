@@ -9,3 +9,4 @@ emoji
 python-dotenv
 tweepy
 textblob
+keras
